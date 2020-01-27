@@ -1,32 +1,40 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <Windows.h>
 using namespace std;
-void End()
+void end()
 {
     exit(0);
 }
 void create()
 {
+    cout << "Введите название файла : ";
     string name;
     cin >> name;
-    ofstream file;
-    file.open(name);
-    cout << "Файл " << name << " успешно создан!\n";
+    name += ".txt";
+    fstream file;
+    file.open(name, fstream::out | fstream::app);
+    if (file.is_open())
+        cout << "Файл " << name << " успешно создан!\n";
+    else 
+    {
+        cout << "ОШИБКА создания файла, повторите попытку\n";
+        create();
+    }
     file.close();
 }
 void view()
 {
-    cout << "Введите название файла:\n";
+    cout << "Введите название файла : ";
     string name;
     cin >> name;
-    ifstream file;
+    name += ".txt";
+    fstream file;
     file.open(name);
-    if (!file.is_open())
-        cout << "Ошибка открытия файла!\n";
-    else
+    if (file.is_open())
     {
-        cout << "Файл открыт:\n";
+        cout << "Файл открыт! : ";
         string str;
         while (!file.eof())
         {
@@ -34,44 +42,181 @@ void view()
             getline(file, str);
             cout << str << endl;
         }
-        file.close();
     }
+    else
+    {
+        cout << "ОШИБКА открытия файла, повторите попытку\n";
+        view();
+    }
+    file.close();
 }
-void Correction()
+void correction()
 {
-    cout << "Введите название файла:\n";
+    cout << "Введите название файла : ";
     string name;
     cin >> name;
+    name += ".txt";
     fstream file;
-    file.open(name, fstream::in | fstream::out | fstream::app);
-    if (!file.is_open())
-        cout << "Ошибка открытия файла!\n";
+    file.open(name, fstream::app | fstream::out);
+    if (file.is_open())
+    { 
+        int a, b, c, d, m, n, q;
+        string name;
+        cout << "Сколько человек вы хотите добавить? : ";
+        cin >> q;
+        for (int i = 0; i < q; i++)
+        {
+            cout << "Имя : ";
+            cin >> name;
+            cout << "Номер группы : ";
+            cin >> a;
+            cout << "Год рождения : ";
+            cin >> b;
+            cout << "Оценка по математике : ";
+            cin >> c;
+            cout << "Оценка по физике : ";
+            cin >> d;
+            cout << "Оценка по информатике : ";
+            cin >> m;
+            cout << "Оценка по химии : ";
+            cin >> n;
+            file << "Студент : " << name << endl;
+            file << "Номер группы : " << a << endl;
+            file << "Год рождения : " << b << endl;
+            file << "Математика : " << c << endl;
+            file << "Физика : " << d << endl;
+            file << "Информатика : " << m << endl;
+            file << "Химия : " << n << endl;
+            file << "Средний балл : " << (c + d + m + n) / 4. << endl;
+            file << endl << "----------------------" << endl << endl;
+        }
+        cout << "Новые данные внесены!";
+    }
     else
-        cout << "Файл открыт\n";
+    {
+        cout << "ОШИБКА открытия файла, повторите попытку\n";
+        correction();
+    }
+    file.close();
 }
-void logics() 
+void Rating()
 {
-
-    cout << "Введите нужную букву: ";
+    cout << "Введите название файла : ";
+    string name;
+    cin >> name;
+    name += ".txt";
+    fstream file;
+    file.open(name, fstream::out);
+    if (file.is_open())
+    {
+        cout << "Сколько человек вы хотите добавить? : ";
+        int q;
+        cin >> q;
+        int* a = new int[q];
+        int* b = new int[q];
+        double* c = new double[q];
+        double* d = new double[q];
+        double* m = new double[q];
+        double* n = new double[q];
+        double* srball = new double[q];
+        string* names = new string[q];
+        for (int i = 0; i < q; i++)
+        {
+            cout << "Имя : ";
+            cin >> names[i];
+            cout << "Номер группы : ";
+            cin >> a[i];
+            cout << "Год рождения : ";
+            cin >> b[i];
+            cout << "Оценка по математике : ";
+            cin >> c[i];
+            cout << "Оценка по физике : ";
+            cin >> d[i];
+            cout << "Оценка по информатике : ";
+            cin >> m[i];
+            cout << "Оценка по химии : ";
+            cin >> n[i];
+            file << "Студент : " << names[i] << endl;
+            file << "Номер группы : " << a[i] << endl;
+            file << "Год рождения : " << b[i] << endl;
+            file << "Математика : " << c[i] << endl;
+            file << "Физика : " << d[i] << endl;
+            file << "Информатика : " << m[i] << endl;
+            file << "Химия : " << n[i] << endl;
+            srball[i] = (c[i] + d[i] + m[i] + n[i]) / 4;
+            file << "Средний балл : " << srball[i] << endl;
+            file << endl << "----------------------" << endl << endl;
+        }
+        file.close();
+        double x = 0, y;
+        for (int i = 0; i < q; i++)
+        {
+            x += srball[i];
+        }
+        y = x / q;
+        cout << "Номер интересующей группы : ";
+        int k;
+        cin >> k;
+        string name2;
+        name2 = "Reting_" + name;
+        ofstream file2;
+        file2.open(name2);
+        file2 << "Общий средний балл : " << y << endl;
+        file2 << "Номер группы : " << k << endl;
+        for (int i = 0; i < q; i++)
+        {
+            if (srball[i] > y && a[i]==k)
+            {
+                file2 << "Студент : " << names[i] << endl;
+                file2 << "Номер группы : " << a[i] << endl;
+                file2 << "Год рождения : " << b[i] << endl;
+                file2 << "Математика : " << c[i] << endl;
+                file2 << "Физика : " << d[i] << endl;
+                file2 << "Информатика : " << m[i] << endl;
+                file2 << "Химия : " << n[i] << endl;
+                file2 << "Средний балл : " << srball[i] << endl;
+                file2 << endl << "----------------------" << endl << endl;
+            }
+        }
+        file2.close();
+        delete[] a;
+        delete[] b;
+        delete[] c;
+        delete[] d;
+        delete[] m;
+        delete[] n;
+        delete[] names;
+        delete[] srball;
+        cout << "Рейтинг составлен!\n";
+    }
+    else
+    {
+        cout << "ОШИБКА открытия файла, повторите попытку\n";
+        Rating();
+    }
+}
+void logics()
+{
+    cout << "Введите нужную букву : ";
     char fan;
     do
     {
         cin >> fan;
         switch (fan)
         {
-        case 'a': create(); break;
-        case 'b': view(); break;
-        case 'c': Correction(); break;
-        case 'd': view;
-        case 'x': End();
-        default:cout << "Некоректный ввод данных. Попробуй ещё раз:\n";
-        }
-    } while (fan!='a' && fan != 'b' && fan !='c'  && fan != 'd' && fan != 'x');
-    logics();
+        case 'a':create(); break;
+        case 'b':view(); break;
+        case 'c':correction(); break;
+        case 'd':Rating(); break;
+        case 'x':end();
+        default:cout << "Некоректный ввод данных, повторите попытку: ";
+        } 
+    } while (fan != 'a' && fan != 'x' && fan != 'b' && fan != 'c' && fan != 'd');
+   logics();
 }
 int main()
 {
     setlocale(LC_ALL, "ru");
-    cout << "Создание - a\nПросмотр - b\nКоррекция - c\nРейтинг - d\nЗавершение работы - x\n";
+    cout << "";
     logics();
 }
