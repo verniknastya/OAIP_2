@@ -1,0 +1,4 @@
+﻿  lama2.9.cpp
+D:\OAIP_2\lama2.9\lama2.9\lama2.9.cpp(16,80): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+D:\OAIP_2\lama2.9\lama2.9\lama2.9.cpp(16,77): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+  lama2.9.vcxproj -> D:\OAIP_2\lama2.9\Debug\lama2.9.exe
