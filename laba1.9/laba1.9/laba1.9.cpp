@@ -34,7 +34,7 @@ void view()
     file.open(name);
     if (file.is_open())
     {
-        cout << "Файл открыт! : ";
+        cout << "Файл открыт! : \n";
         string str;
         while (!file.eof())
         {
@@ -56,48 +56,97 @@ void correction()
     string name;
     cin >> name;
     name += ".txt";
-    fstream file;
-    file.open(name, fstream::app | fstream::out);
-    if (file.is_open())
-    { 
-        int a, b, c, d, m, n, q;
-        string name;
-        cout << "Сколько человек вы хотите добавить? : ";
-        cin >> q;
-        for (int i = 0; i < q; i++)
-        {
-            cout << "Имя : ";
-            cin >> name;
-            cout << "Номер группы : ";
-            cin >> a;
-            cout << "Год рождения : ";
-            cin >> b;
-            cout << "Оценка по математике : ";
-            cin >> c;
-            cout << "Оценка по физике : ";
-            cin >> d;
-            cout << "Оценка по информатике : ";
-            cin >> m;
-            cout << "Оценка по химии : ";
-            cin >> n;
-            file << "Студент : " << name << endl;
-            file << "Номер группы : " << a << endl;
-            file << "Год рождения : " << b << endl;
-            file << "Математика : " << c << endl;
-            file << "Физика : " << d << endl;
-            file << "Информатика : " << m << endl;
-            file << "Химия : " << n << endl;
-            file << "Средний балл : " << (c + d + m + n) / 4. << endl;
-            file << endl << "----------------------" << endl << endl;
-        }
-        cout << "Новые данные внесены!";
-    }
-    else
+    ofstream file;
+    cout << "Добавить новые данные : a\nУдалить старые данные : b\n";
+    char cor;
+    cin >> cor;
+    if (cor == 'a') 
     {
-        cout << "ОШИБКА открытия файла, повторите попытку\n";
-        correction();
+        file.open(name, fstream::app | fstream::out);
+        if (file.is_open())
+        {
+            int a, b, c, d, m, n, q;
+            string name;
+            cout << "Сколько человек вы хотите добавить? : ";
+            cin >> q;
+            for (int i = 0; i < q; i++)
+            {
+                cout << "Имя : ";
+                SetConsoleCP(1251);
+                cin >> name;
+                SetConsoleCP(866);
+                cout << "Номер группы : ";
+                cin >> a;
+                cout << "Год рождения : ";
+                cin >> b;
+                cout << "Оценка по математике : ";
+                cin >> c;
+                cout << "Оценка по физике : ";
+                cin >> d;
+                cout << "Оценка по информатике : ";
+                cin >> m;
+                cout << "Оценка по химии : ";
+                cin >> n;
+                file << "Студент : " << name << endl;
+                file << "Номер группы : " << a << endl;
+                file << "Год рождения : " << b << endl;
+                file << "Математика : " << c << endl;
+                file << "Физика : " << d << endl;
+                file << "Информатика : " << m << endl;
+                file << "Химия : " << n << endl;
+                file << "Средний балл : " << (c + d + m + n) / 4. << endl;
+                file << endl << "----------------------" << endl << endl;
+            }
+            cout << "Новые данные внесены!\n";
+        }
+        else
+        {
+            cout << "ОШИБКА открытия файла, повторите попытку\n";
+            correction();
+        }
+        file.close();
     }
-    file.close();
+    if (cor == 'b')
+    {
+        ifstream file;
+        file.open(name, fstream::out | fstream::app);
+        if (file.is_open())
+        {
+            string str;
+            string text;
+            int a, x = 0, k = 10;
+            cout << "Какого по счёту человека вы хотите удалить? : ";
+            cin >> a;
+            a = (a - 1) * 11 + 1;
+            while (getline(file, str))
+            {
+
+                x++;
+                if (x != a)
+                {
+                    text += str;
+                    text += "\n";
+                }
+                if (x == a && k > 0)
+                {
+                    a++;
+                    k--;
+                }
+            }
+            file.close();
+            ofstream file2;
+            file2.open(name);
+            file2 << text;
+            file2.close();
+            cout << "Данные удалены!\n";
+        }
+        else
+        {
+            cout << "ОШИБКА открытия файла, повторите попытку\n";
+            correction();
+        }
+        file.close();
+    }
 }
 void Rating()
 {
@@ -123,7 +172,9 @@ void Rating()
         for (int i = 0; i < q; i++)
         {
             cout << "Имя : ";
+            SetConsoleCP(1251);
             cin >> names[i];
+            SetConsoleCP(866);
             cout << "Номер группы : ";
             cin >> a[i];
             cout << "Год рождения : ";
@@ -161,8 +212,6 @@ void Rating()
         name2 = "Reting_" + name;
         ofstream file2;
         file2.open(name2);
-        file2 << "Общий средний балл : " << y << endl;
-        file2 << "Номер группы : " << k << endl;
         for (int i = 0; i < q; i++)
         {
             if (srball[i] > y && a[i]==k)
@@ -178,6 +227,8 @@ void Rating()
                 file2 << endl << "----------------------" << endl << endl;
             }
         }
+        file2 << "Общий средний балл : " << y << endl;
+        file2 << "Номер группы : " << k << endl;
         file2.close();
         delete[] a;
         delete[] b;
@@ -188,6 +239,7 @@ void Rating()
         delete[] names;
         delete[] srball;
         cout << "Рейтинг составлен!\n";
+        file.close();
     }
     else
     {
@@ -217,6 +269,6 @@ void logics()
 int main()
 {
     setlocale(LC_ALL, "ru");
-    cout << "";
+    cout << "Создать файл : a\tПросмотреть файл : b\tОткорректировать файл : c\nСоставить рейтинг : d\tЗавешить работу : x\n";
     logics();
 }
