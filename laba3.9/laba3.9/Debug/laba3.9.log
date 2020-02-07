@@ -1,0 +1,4 @@
+﻿  laba3.9.cpp
+D:\OAIP_2\laba3.9\laba3.9\laba3.9.cpp(112,23): warning C4101: q: неиспользованная локальная переменная
+D:\OAIP_2\laba3.9\laba3.9\laba3.9.cpp(205): warning C4717: logics: рекурсия на всех путях выполнения, функция вызовет переполнение стека
+  laba3.9.vcxproj -> D:\OAIP_2\laba3.9\Debug\laba3.9.exe

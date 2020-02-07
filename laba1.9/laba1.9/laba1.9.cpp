@@ -56,24 +56,25 @@ void correction()
     string name;
     cin >> name;
     name += ".txt";
-    ofstream file;
+    fstream file;
+    file.open(name, fstream::app | fstream::out | fstream::in);
     cout << "Добавить новые данные : a\nУдалить старые данные : b\n";
     char cor;
     cin >> cor;
     if (cor == 'a') 
     {
-        file.open(name, fstream::app | fstream::out);
         if (file.is_open())
         {
             int a, b, c, d, m, n, q;
-            string name;
+            string fio;
             cout << "Сколько человек вы хотите добавить? : ";
             cin >> q;
             for (int i = 0; i < q; i++)
             {
-                cout << "Имя : ";
+                cout << "ФИО : ";
                 SetConsoleCP(1251);
-                cin >> name;
+                cin.ignore();
+                getline(cin, fio);
                 SetConsoleCP(866);
                 cout << "Номер группы : ";
                 cin >> a;
@@ -87,7 +88,7 @@ void correction()
                 cin >> m;
                 cout << "Оценка по химии : ";
                 cin >> n;
-                file << "Студент : " << name << endl;
+                file << "Студент : " << fio << endl;
                 file << "Номер группы : " << a << endl;
                 file << "Год рождения : " << b << endl;
                 file << "Математика : " << c << endl;
@@ -108,32 +109,29 @@ void correction()
     }
     if (cor == 'b')
     {
-        ifstream file;
-        file.open(name, fstream::out | fstream::app);
         if (file.is_open())
         {
-            string str;
-            string text;
-            int a, x = 0, k = 10;
-            cout << "Какого по счёту человека вы хотите удалить? : ";
-            cin >> a;
-            a = (a - 1) * 11 + 1;
-            while (getline(file, str))
+            string str1 = "Студент : ", str2, str3, text;
+            int x = 0;
+            cout << "Введите человека которого хотите удалить : ";
+            SetConsoleCP(1251);
+            cin.ignore();
+            getline(cin, str2);
+            SetConsoleCP(866);
+            str1 += str2;
+            while (getline(file, str3))
             {
-
-                x++;
-                if (x != a)
-                {
-                    text += str;
+                if (str1 == str3)
+                    do
+                    {
+                        getline(file, str3);
+                        x++;
+                    } while (x!=11);
+                    text += str3;
                     text += "\n";
-                }
-                if (x == a && k > 0)
-                {
-                    a++;
-                    k--;
-                }
             }
             file.close();
+
             ofstream file2;
             file2.open(name);
             file2 << text;
@@ -168,12 +166,13 @@ void Rating()
         double* m = new double[q];
         double* n = new double[q];
         double* srball = new double[q];
-        string* names = new string[q];
+        string* fio = new string[q];
         for (int i = 0; i < q; i++)
         {
-            cout << "Имя : ";
+            cout << "ФИО : ";
             SetConsoleCP(1251);
-            cin >> names[i];
+            cin.ignore();
+            getline(cin, fio[i]);
             SetConsoleCP(866);
             cout << "Номер группы : ";
             cin >> a[i];
@@ -187,7 +186,7 @@ void Rating()
             cin >> m[i];
             cout << "Оценка по химии : ";
             cin >> n[i];
-            file << "Студент : " << names[i] << endl;
+            file << "Студент : " << fio[i] << endl;
             file << "Номер группы : " << a[i] << endl;
             file << "Год рождения : " << b[i] << endl;
             file << "Математика : " << c[i] << endl;
@@ -216,7 +215,7 @@ void Rating()
         {
             if (srball[i] > y && a[i]==k)
             {
-                file2 << "Студент : " << names[i] << endl;
+                file2 << "Студент : " << fio[i] << endl;
                 file2 << "Номер группы : " << a[i] << endl;
                 file2 << "Год рождения : " << b[i] << endl;
                 file2 << "Математика : " << c[i] << endl;
@@ -236,7 +235,7 @@ void Rating()
         delete[] d;
         delete[] m;
         delete[] n;
-        delete[] names;
+        delete[] fio;
         delete[] srball;
         cout << "Рейтинг составлен!\n";
         file.close();
