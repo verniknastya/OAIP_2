@@ -26,6 +26,29 @@ void sort(SHOP* arr, int x)
             }
     }
 }
+void Qsort(SHOP* arr, int begin, int end)
+{
+    int i, j, x;
+    i = begin;
+    j = end;
+    x = arr[(i + j) / 2].x;
+    do
+    {
+        while (arr[i].x > x)i++;
+        while (arr[j].x < x)j--;
+        if (i <= j)
+        {
+            auto k = arr[i];
+            arr[i] = arr[j];
+            arr[j] = k;
+            i++;
+            j--;
+        }
+    } while (i <= j);
+    if (begin < j)Qsort(arr, begin, j);
+    if (end > i)Qsort(arr, i, end);
+    /*Qsort(arr, 0, x - 1); - Обращение к этой функции */
+}
 void end()
 {
     exit(0);
@@ -133,7 +156,8 @@ void correction()
                     cout << "Количество продукции : ";
                     cin >> shop[i].x;
                 }
-                sort(shop, n);
+                /*sort(shop, n);*/
+                Qsort(shop, 0, n - 1);
                 for (int i = 0; i < n; i++)
                 {
                     file << "Продукция : " << shop[i].name << endl;
@@ -206,6 +230,6 @@ void logics()
 int main()
 {
     setlocale(LC_ALL, "ru");
-    cout << "Создать файл : a\tПросмотреть файл : b\tОткорректировать файл : c\nСоставить рейтинг : d\tЗавешить работу : x\n";
+    cout << "Создать файл : a\nПросмотреть файл : b\nОткорректировать файл : c\nЗавешить работу : x\n";
     logics();
 }
