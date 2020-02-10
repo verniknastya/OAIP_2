@@ -166,14 +166,6 @@ void Rating()
         int q;
         cin >> q;
         student* humens = new student[q];
-        /*int* a = new int[q];
-        int* b = new int[q];
-        double* c = new double[q];
-        double* d = new double[q];
-        double* m = new double[q];
-        double* n = new double[q];
-        double* srball = new double[q];
-        string* fio = new string[q];*/
         for (int i = 0; i < q; i++)
         {
             cout << "ФИО : ";
@@ -236,14 +228,6 @@ void Rating()
         file2 << "Общий средний балл : " << y << endl;
         file2 << "Номер группы : " << k << endl;
         file2.close();
-        //delete[] a;
-        //delete[] b;
-        //delete[] c;
-        //delete[] d;
-        //delete[] m;
-        //delete[] n;
-        //delete[] fio;
-        //delete[] srball;
         cout << "Рейтинг составлен!\n";
     }
     else
