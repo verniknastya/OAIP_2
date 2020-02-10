@@ -3,6 +3,11 @@
 #include <string>
 #include <Windows.h>
 using namespace std;
+struct student
+{
+    string fio;
+    int a, b, c, d, m, n, srball;
+};
 void end()
 {
     exit(0);
@@ -65,8 +70,9 @@ void correction()
     {
         if (file.is_open())
         {
-            int a, b, c, d, m, n, q;
-            string fio;
+            int/* a, b, c, d, m, n, */q;
+            /*string fio;*/
+            student human;
             cout << "Сколько человек вы хотите добавить? : ";
             cin >> q;
             for (int i = 0; i < q; i++)
@@ -74,28 +80,28 @@ void correction()
                 cout << "ФИО : ";
                 SetConsoleCP(1251);
                 cin.ignore();
-                getline(cin, fio);
+                getline(cin, human.fio);
                 SetConsoleCP(866);
                 cout << "Номер группы : ";
-                cin >> a;
+                cin >> human.a;
                 cout << "Год рождения : ";
-                cin >> b;
+                cin >> human.b;
                 cout << "Оценка по математике : ";
-                cin >> c;
+                cin >> human.c;
                 cout << "Оценка по физике : ";
-                cin >> d;
+                cin >> human.d;
                 cout << "Оценка по информатике : ";
-                cin >> m;
+                cin >> human.m;
                 cout << "Оценка по химии : ";
-                cin >> n;
-                file << "Студент : " << fio << endl;
-                file << "Номер группы : " << a << endl;
-                file << "Год рождения : " << b << endl;
-                file << "Математика : " << c << endl;
-                file << "Физика : " << d << endl;
-                file << "Информатика : " << m << endl;
-                file << "Химия : " << n << endl;
-                file << "Средний балл : " << (c + d + m + n) / 4. << endl;
+                cin >> human.n;
+                file << "Студент : " << human.fio << endl;
+                file << "Номер группы : " << human.a << endl;
+                file << "Год рождения : " << human.b << endl;
+                file << "Математика : " << human.c << endl;
+                file << "Физика : " << human.d << endl;
+                file << "Информатика : " << human.m << endl;
+                file << "Химия : " << human.n << endl;
+                file << "Средний балл : " << (human.c + human.d + human.m + human.n) / 4. << endl;
                 file << endl << "----------------------" << endl << endl;
             }
             cout << "Новые данные внесены!\n";
@@ -159,49 +165,50 @@ void Rating()
         cout << "Сколько человек вы хотите добавить? : ";
         int q;
         cin >> q;
-        int* a = new int[q];
+        student* humens = new student[q];
+        /*int* a = new int[q];
         int* b = new int[q];
         double* c = new double[q];
         double* d = new double[q];
         double* m = new double[q];
         double* n = new double[q];
         double* srball = new double[q];
-        string* fio = new string[q];
+        string* fio = new string[q];*/
         for (int i = 0; i < q; i++)
         {
             cout << "ФИО : ";
             SetConsoleCP(1251);
             cin.ignore();
-            getline(cin, fio[i]);
+            getline(cin, humens[i].fio);
             SetConsoleCP(866);
             cout << "Номер группы : ";
-            cin >> a[i];
+            cin >> humens[i].a;
             cout << "Год рождения : ";
-            cin >> b[i];
+            cin >> humens[i].b;
             cout << "Оценка по математике : ";
-            cin >> c[i];
+            cin >> humens[i].c;
             cout << "Оценка по физике : ";
-            cin >> d[i];
+            cin >> humens[i].d;
             cout << "Оценка по информатике : ";
-            cin >> m[i];
+            cin >> humens[i].m;
             cout << "Оценка по химии : ";
-            cin >> n[i];
-            file << "Студент : " << fio[i] << endl;
-            file << "Номер группы : " << a[i] << endl;
-            file << "Год рождения : " << b[i] << endl;
-            file << "Математика : " << c[i] << endl;
-            file << "Физика : " << d[i] << endl;
-            file << "Информатика : " << m[i] << endl;
-            file << "Химия : " << n[i] << endl;
-            srball[i] = (c[i] + d[i] + m[i] + n[i]) / 4;
-            file << "Средний балл : " << srball[i] << endl;
+            cin >> humens[i].n;
+            file << "Студент : " << humens[i].fio << endl;
+            file << "Номер группы : " << humens[i].a << endl;
+            file << "Год рождения : " << humens[i].b << endl;
+            file << "Математика : " << humens[i].c << endl;
+            file << "Физика : " << humens[i].d << endl;
+            file << "Информатика : " << humens[i].m << endl;
+            file << "Химия : " << humens[i].n << endl;
+            humens[i].srball = (humens[i].c + humens[i].d + humens[i].m + humens[i].n) / 4;
+            file << "Средний балл : " << humens[i].srball << endl;
             file << endl << "----------------------" << endl << endl;
         }
         file.close();
         double x = 0, y;
         for (int i = 0; i < q; i++)
         {
-            x += srball[i];
+            x += humens[i].srball;
         }
         y = x / q;
         cout << "Номер интересующей группы : ";
@@ -213,32 +220,31 @@ void Rating()
         file2.open(name2);
         for (int i = 0; i < q; i++)
         {
-            if (srball[i] > y && a[i]==k)
+            if (humens[i].srball > y && humens[i].a==k)
             {
-                file2 << "Студент : " << fio[i] << endl;
-                file2 << "Номер группы : " << a[i] << endl;
-                file2 << "Год рождения : " << b[i] << endl;
-                file2 << "Математика : " << c[i] << endl;
-                file2 << "Физика : " << d[i] << endl;
-                file2 << "Информатика : " << m[i] << endl;
-                file2 << "Химия : " << n[i] << endl;
-                file2 << "Средний балл : " << srball[i] << endl;
+                file2 << "Студент : " << humens[i].fio << endl;
+                file2 << "Номер группы : " << humens[i].a << endl;
+                file2 << "Год рождения : " << humens[i].b << endl;
+                file2 << "Математика : " << humens[i].c << endl;
+                file2 << "Физика : " << humens[i].d << endl;
+                file2 << "Информатика : " << humens[i].m << endl;
+                file2 << "Химия : " << humens[i].n << endl;
+                file2 << "Средний балл : " << humens[i].srball << endl;
                 file2 << endl << "----------------------" << endl << endl;
             }
         }
         file2 << "Общий средний балл : " << y << endl;
         file2 << "Номер группы : " << k << endl;
         file2.close();
-        delete[] a;
-        delete[] b;
-        delete[] c;
-        delete[] d;
-        delete[] m;
-        delete[] n;
-        delete[] fio;
-        delete[] srball;
+        //delete[] a;
+        //delete[] b;
+        //delete[] c;
+        //delete[] d;
+        //delete[] m;
+        //delete[] n;
+        //delete[] fio;
+        //delete[] srball;
         cout << "Рейтинг составлен!\n";
-        file.close();
     }
     else
     {
