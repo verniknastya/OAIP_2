@@ -8,6 +8,16 @@ struct student
     string fio;
     int a, b, c, d, m, n, srball;
 };
+int transfer(string str)
+{
+    int x, y = 0;
+    for (int i =0; str[i]!='\0'; i++)
+    {
+        x = (int)str[i] - (int)'0';
+        y = y * 10 + x;
+    }
+    return y;
+}
 void end()
 {
     exit(0);
@@ -58,11 +68,13 @@ void view()
 void correction()
 {
     cout << "Введите название файла : ";
-    string name;
+    string name, sisyem_name;
     cin >> name;
     name += ".txt";
-    fstream file;
+    fstream file, sistem_file;
     file.open(name, fstream::app | fstream::out | fstream::in);
+    sisyem_name = "Sistem_" + name;
+    sistem_file.open(sisyem_name, fstream::app | fstream::out | fstream::in);
     cout << "Добавить новые данные : a\nУдалить старые данные : b\n";
     char cor;
     cin >> cor;
@@ -70,40 +82,47 @@ void correction()
     {
         if (file.is_open())
         {
-            int/* a, b, c, d, m, n, */q;
-            /*string fio;*/
-            student human;
+            int q;
             cout << "Сколько человек вы хотите добавить? : ";
             cin >> q;
+            student* humen = new student[q];
             for (int i = 0; i < q; i++)
             {
                 cout << "ФИО : ";
                 SetConsoleCP(1251);
                 cin.ignore();
-                getline(cin, human.fio);
+                getline(cin, humen[i].fio);
                 SetConsoleCP(866);
                 cout << "Номер группы : ";
-                cin >> human.a;
+                cin >> humen[i].m;
                 cout << "Год рождения : ";
-                cin >> human.b;
+                cin >> humen[i].n;
                 cout << "Оценка по математике : ";
-                cin >> human.c;
+                cin >> humen[i].a;
                 cout << "Оценка по физике : ";
-                cin >> human.d;
+                cin >> humen[i].b;
                 cout << "Оценка по информатике : ";
-                cin >> human.m;
+                cin >> humen[i].c;
                 cout << "Оценка по химии : ";
-                cin >> human.n;
-                file << "Студент : " << human.fio << endl;
-                file << "Номер группы : " << human.a << endl;
-                file << "Год рождения : " << human.b << endl;
-                file << "Математика : " << human.c << endl;
-                file << "Физика : " << human.d << endl;
-                file << "Информатика : " << human.m << endl;
-                file << "Химия : " << human.n << endl;
-                file << "Средний балл : " << (human.c + human.d + human.m + human.n) / 4. << endl;
-                file << endl << "----------------------" << endl << endl;
+                cin >> humen[i].d;
+                file << "Студент : " << humen[i].fio << endl
+                    << "Номер группы : " << humen[i].m << endl
+                    << "Год рождения : " << humen[i].n << endl
+                    << "Математика : " << humen[i].a << endl
+                    << "Физика : " << humen[i].b << endl
+                    << "Информатика : " << humen[i].c << endl
+                    << "Химия : " << humen[i].d << endl
+                    << "Средний балл : " << (humen[i].a + humen[i].b + humen[i].c + humen[i].d) / 4. << endl
+                    << endl << "----------------------" << endl << endl;
+                sistem_file << humen[i].fio << endl
+                    << humen[i].m << endl
+                    << humen[i].n << endl
+                    << humen[i].a << endl
+                    << humen[i].b << endl
+                    << humen[i].c << endl
+                    << humen[i].d << endl;
             }
+            delete[] humen;
             cout << "Новые данные внесены!\n";
         }
         else
@@ -111,46 +130,80 @@ void correction()
             cout << "ОШИБКА открытия файла, повторите попытку\n";
             correction();
         }
-        file.close();
     }
     if (cor == 'b')
     {
         if (file.is_open())
         {
-            string str1 = "Студент : ", str2, str3, text;
-            int x = 0;
+            string str;
+            int k, p = 0;
+            student humen[100];
+            for (int i = 0; i < 100 && !file.eof(); i++)
+            {
+                SetConsoleCP(1251);
+                getline(sistem_file, str);
+                humen[i].fio = str;
+                SetConsoleCP(866);
+                getline(sistem_file, str);
+                humen[i].m = transfer(str);
+                getline(sistem_file, str);
+                humen[i].n = transfer(str);
+                getline(sistem_file, str);
+                humen[i].a = transfer(str);
+                getline(sistem_file, str);
+                humen[i].b = transfer(str);
+                getline(sistem_file, str);
+                humen[i].c = transfer(str);
+                getline(sistem_file, str);
+                humen[i].d = transfer(str);
+                p++;
+            }
             cout << "Введите человека которого хотите удалить : ";
             SetConsoleCP(1251);
             cin.ignore();
-            getline(cin, str2);
+            getline(cin, str);
             SetConsoleCP(866);
-            str1 += str2;
-            while (getline(file, str3))
+            for (int i = 0; i < p; i++)
             {
-                if (str1 == str3)
-                    do
-                    {
-                        getline(file, str3);
-                        x++;
-                    } while (x!=11);
-                    text += str3;
-                    text += "\n";
+                if (humen[i].fio == str)
+                    k = i;
             }
             file.close();
-
-            ofstream file2;
-            file2.open(name);
-            file2 << text;
-            file2.close();
-            cout << "Данные удалены!\n";
+            sistem_file.close();
+            ofstream file, sistem_file;
+            file.open(name);
+            sistem_file.open(sisyem_name);
+            for (int i = 0; i < p-1; i++)
+            {
+                if (i != k && humen[i].fio != "")
+                {
+                    file << "Студент : " << humen[i].fio << endl 
+                        << "Номер группы : " << humen[i].m << endl
+                        << "Год рождения : " << humen[i].n << endl
+                        << "Математика : " << humen[i].a << endl
+                        << "Физика : " << humen[i].b << endl
+                        << "Информатика : " << humen[i].c << endl
+                        << "Химия : " << humen[i].d << endl
+                        << "Средний балл : " << (humen[i].a + humen[i].b + humen[i].c + humen[i].d) / 4. << endl
+                        << endl << "----------------------" << endl << endl;
+                    sistem_file << humen[i].fio << endl
+                        << humen[i].m << endl
+                        << humen[i].n << endl
+                        << humen[i].a << endl
+                        << humen[i].b << endl
+                        << humen[i].c << endl
+                        << humen[i].d << endl;
+                }
+            }
         }
         else
         {
             cout << "ОШИБКА открытия файла, повторите попытку\n";
             correction();
         }
-        file.close();
     }
+    file.close();
+    sistem_file.close();
 }
 void Rating()
 {
