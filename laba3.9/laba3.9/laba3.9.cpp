@@ -3,16 +3,16 @@
 #include <string>
 #include <Windows.h>
 using namespace std;
-struct SHOP 
+struct production 
 {
     string name;
     int x;
 };
-struct PLANT
+struct shop
 {
-    int number;
-    SHOP shop;
-};
+    int n;
+    production p[3];
+}plant[100];
 void sort(SHOP* arr, int x)
 {
     for (int i = 0; i < x; i++)
@@ -49,167 +49,109 @@ void Qsort(SHOP* arr, int begin, int end)
     if (end > i)Qsort(arr, i, end);
     /*Qsort(arr, 0, x - 1); - Обращение к этой функции */
 }
+int transfer(string str)
+{
+    int x, y = 0;
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        x = (int)str[i] - (int)'0';
+        y = y * 10 + x;
+    }
+    return y;
+}
 void end()
 {
+    ofstream file;
+    file.open("file.txt");
+    for (int i = 0; i < p; i++) {
+        file << plant[i].n << endl;
+        for (int j = 0; j < 3; j++) {
+            file << plant[i].p[j].name
+                << plant[i].p[j].x;
+        }
+    }
+    file.close();
     exit(0);
 }
-void create()
-{
-    cout << "Введите название файла : ";
-    string name;
-    cin >> name;
-    name += ".txt";
-    fstream file;
-    file.open(name, fstream::out | fstream::app);
-    if (file.is_open())
-        cout << "Файл " << name << " успешно создан!\n";
-    else
-    {
-        cout << "ОШИБКА создания файла, повторите попытку\n";
-        create();
-    }
-    file.close();
-}
-void view()
-{
-    cout << "Введите название файла : ";
-    string name;
-    cin >> name;
-    name += ".txt";
-    fstream file;
-    file.open(name);
-    if (file.is_open())
-    {
-        cout << "Просмотреть весь список : a\nПросмотреть конкретный цех : b\n";
-        char view;
-        cin >> view;
-        if (view == 'a')
-        {
-            cout << "Файл открыт! : \n";
-            string str;
-            while (!file.eof())
-            {
-                str = "";
-                getline(file, str);
-                cout << str << endl;
-            }
-        }
-        if (view == 'b')
-        {
-            string str1 = "Номер цеха : ", str2, str3;
-            cout << "Введите номер цеха : ";
-            cin >> str2;
-            str1 += str2;
-             while (getline(file, str3))
-                if (str3 == str1)
-                    do
-                    {
-                        cout << str3 << endl;
-                        getline(file, str3);
-                    } while (str3.substr(0, 13) != "Номер цеха : " && !file.eof());
-        }
-    }
-    else
-    {
-        cout << "ОШИБКА открытия файла, повторите попытку\n";
-        view();
-    }
-    file.close();
-    
-}
-void correction()
-{
-    cout << "Введите название файла : ";
-    string name;
-    cin >> name;
-    name += ".txt";
-    fstream file;
-    cout << "Добавить новые данные : a\nУдалить старые данные : b\n";
-    char cor;
-    cin >> cor;
-    file.open(name, fstream::out | fstream::app | fstream::in);
-    if (cor == 'a')
-    {
-        if (file.is_open())
-        {
-            int m, n, q;            
-            cout << "Сколько цехов вы хотите добавить? : ";
-            cin >> m;
-            PLANT plant;
-            int* a = new int[m];
-            for (int i = 0; i < m; i++)
-            {               
-                cout << "Номер цеха : ";
-                cin >> plant.number;
-                file << "Номер цеха : " << plant.number << endl;
-                cout << "Сколько видов продукции вы хотите добавить? : ";
-                cin >> n;  
-                SHOP* shop = new SHOP[n];
-                for (int i = 0; i < n; i++)
-                {
-                  
-                    cout << "Продукция : ";
-                    SetConsoleCP(1251);
-                    cin.ignore();
-                    getline(cin, shop[i].name);
-                    SetConsoleCP(866);
-                    cout << "Количество продукции : ";
-                    cin >> shop[i].x;
-                }
-                /*sort(shop, n);*/
-                Qsort(shop, 0, n - 1);
-                for (int i = 0; i < n; i++)
-                {
-                    file << "Продукция : " << shop[i].name << endl;
-                    file << "Количество продукции : " << shop[i].x << endl;
-                }
-                delete[] shop;
-                file << endl << "----------------------" << endl << endl;
-            }
-            cout << "Новые данные внесены!\n";
-        }
-        else
-        {
-            cout << "ОШИБКА открытия файла, повторите попытку\n";
-            correction();
-        }
-        file.close();
-    }
-    if (cor == 'b')
-    {
-        if (file.is_open())
-        {
-            string str1 = "Номер цеха : ", str2, str3;
-            string text;
-            cout << "Какой цех вы хотите удалить? : ";
-            cin >> str3;
-            str1 += str3 ;
-            while (getline(file, str2))
-            {
-                if(str1==str2)
-                    do
-                    {
-                        getline(file, str2);                  
-                    } while (str2.substr(0, 13) != "Номер цеха : " && !file.eof());
-                    text += str2;
-                    text += "\n";
-            }
-            file.close();
-            ofstream file2;
-            file2.open(name);
-            file2 << text;
-            file2.close();
-            cout << "Данные удалены!\n";
-        }
-        else
-        {
-            cout << "ОШИБКА открытия файла, повторите попытку\n";
-            correction();
-        }
-        file.close();
-    }
-}
-void logics()
+//void create()
+//{
+//    cout << "Введите название файла : ";
+//    string name;
+//    cin >> name;
+//    name += ".txt";
+//    fstream file;
+//    file.open(name, fstream::out | fstream::app);
+//    if (file.is_open())
+//        cout << "Файл " << name << " успешно создан!\n";
+//    else
+//    {
+//        cout << "ОШИБКА создания файла, повторите попытку\n";
+//        create();
+//    }
+//    file.close();
+//}
+//void view()
+//{
+//    cout << "Введите название файла : ";
+//    string name;
+//    cin >> name;
+//    name += ".txt";
+//    fstream file;
+//    file.open(name);
+//    if (file.is_open())
+//    {
+//        cout << "Просмотреть весь список : a\nПросмотреть конкретный цех : b\n";
+//        char view;
+//        cin >> view;
+//        if (view == 'a')
+//        {
+//            cout << "Файл открыт! : \n";
+//            string str;
+//            while (!file.eof())
+//            {
+//                str = "";
+//                getline(file, str);
+//                cout << str << endl;
+//            }
+//        }
+//        if (view == 'b')
+//        {
+//            string str1 = "Номер цеха : ", str2, str3;
+//            cout << "Введите номер цеха : ";
+//            cin >> str2;
+//            str1 += str2;
+//             while (getline(file, str3))
+//                if (str3 == str1)
+//                    do
+//                    {
+//                        cout << str3 << endl;
+//                        getline(file, str3);
+//                    } while (str3.substr(0, 13) != "Номер цеха : " && !file.eof());
+//        }
+//    }
+//    else
+//    {
+//        cout << "ОШИБКА открытия файла, повторите попытку\n";
+//        view();
+//    }
+//    file.close();
+//    
+//}
+//void correction()
+//{
+//    cout << "Добавить цех : a\nУдалить цех : b\n";
+//    char fan;
+//    cin >> fan;
+//    if (fan == 'a')
+//    {
+//
+//    }
+//    if (fan == 'b')
+//    {
+//
+//    }
+//}
+void logics(shop plant,int p)
 {
     cout << "Введите нужную букву : ";
     char fan;
@@ -230,6 +172,26 @@ void logics()
 int main()
 {
     setlocale(LC_ALL, "ru");
-    cout << "Создать файл : a\nПросмотреть файл : b\nОткорректировать файл : c\nЗавешить работу : x\n";
-    logics();
+    ifstream file;
+    string str;
+    int p = 0;
+    file.open("file.txt");
+    for (int i = 0; i < 100 && !file.eof(); i++)
+    {
+        getline(file, str);
+        plant[i].n = transfer(str);
+        for (int j = 0; j < 3; j++) {
+            SetConsoleCP(1251);
+            getline(file, str);
+            plant[i].p[j].name = str;
+            SetConsoleCP(866);
+            getline(file, str);
+            plant[i].p[j].x = transfer(str);
+        }
+        if (plant[i].n != 0)
+            p++;
+    }
+    file.close();
+    cout << "Просмотреть файл : a\nОткорректировать файл : b\nСоставить рейтинг : c\nЗавешить работу : x\n";
+    logics(plant, p);
 }
