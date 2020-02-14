@@ -84,8 +84,9 @@ int correction(student* humen, int p)
         getline(cin, name);
         SetConsoleCP(866);
         for (int i = 0; i < p; i++) {
-            if (humen[i].fio == name)
-                k = i;
+            if (humen[i].fio == name) {
+                k = i; break;
+            }
         }
         for (int i = k; i < p-1; i++)
             humen[i] = humen[i + 1];
